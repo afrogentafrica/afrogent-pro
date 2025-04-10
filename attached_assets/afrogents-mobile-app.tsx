@@ -1,0 +1,320 @@
+import React, { useState } from 'react';
+import { Star, MapPin, ChevronRight, Home, Search, ShoppingBag, User, ArrowLeft, ChevronLeft } from 'lucide-react';
+
+const AfroGentsMobileApp = () => {
+  const [activeScreen, setActiveScreen] = useState('browse');
+  const [selectedDate, setSelectedDate] = useState('13');
+  const [selectedBarber, setSelectedBarber] = useState(null);
+  
+  const barbers = [
+    {
+      id: 1,
+      name: 'Claude Njeam',
+      title: 'Master Barber',
+      location: 'Dubai, UAE',
+      rating: 4.8,
+      services: [
+        { name: 'Haircut', price: '200.00' },
+        { name: 'Beard Trim', price: '150.00' },
+        { name: 'Hair Color', price: '250.00' },
+        { name: 'Shave', price: '180.00' }
+      ],
+      image: '/api/placeholder/100/100'
+    },
+    {
+      id: 2,
+      name: 'James Peterson',
+      title: 'Afro Specialist',
+      location: 'Dubai, UAE',
+      rating: 4.7,
+      image: '/api/placeholder/100/100'
+    }
+  ];
+
+  const dates = [
+    { day: '12', month: 'MAY', weekday: 'SUN' },
+    { day: '13', month: 'MAY', weekday: 'FRI' },
+    { day: '14', month: 'MAY', weekday: 'SAT' },
+    { day: '15', month: 'MAY', weekday: 'MON' }
+  ];
+
+  const handleBarberSelect = (barber) => {
+    setSelectedBarber(barber);
+    setActiveScreen('detail');
+  };
+
+  const handleBookNow = () => {
+    setActiveScreen('booking');
+  };
+
+  const handleBackToDetail = () => {
+    setActiveScreen('detail');
+  };
+
+  const handleBackToBrowse = () => {
+    setActiveScreen('browse');
+    setSelectedBarber(null);
+  };
+
+  const renderBrowseScreen = () => {
+    return (
+      <div className="relative h-full bg-black text-white p-4">
+        <div className="mb-6 flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full overflow-hidden">
+            <img src="/api/placeholder/32/32" alt="User" className="w-full h-full object-cover" />
+          </div>
+          <div>
+            <h2 className="text-base font-medium">Allen Roy</h2>
+            <div className="flex items-center text-gray-400 text-xs">
+              <MapPin size={12} className="mr-1" />
+              <span>Old Cutler Rd</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Filter tabs */}
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+          <button className="bg-green-400 text-black px-6 py-2 rounded-full text-sm font-medium">
+            All
+          </button>
+          <button className="border border-gray-600 px-6 py-2 rounded-full text-sm">
+            Hair
+          </button>
+          <button className="border border-gray-600 px-6 py-2 rounded-full text-sm">
+            Beard
+          </button>
+          <button className="border border-gray-600 px-6 py-2 rounded-full text-sm">
+            Color
+          </button>
+        </div>
+
+        {/* Barber cards */}
+        <div className="space-y-4">
+          {barbers.map(barber => (
+            <div 
+              key={barber.id} 
+              className="bg-gray-900 rounded-3xl overflow-hidden"
+              onClick={() => handleBarberSelect(barber)}
+            >
+              <div className="relative h-48">
+                <img src="/api/placeholder/400/200" alt={barber.name} className="w-full h-full object-cover" />
+                <div className="absolute bottom-0 left-0 p-4 w-full bg-gradient-to-t from-black to-transparent">
+                  <h3 className="text-lg font-bold">{barber.name}</h3>
+                  <p className="text-sm text-gray-300">{barber.title}</p>
+                  <div className="flex items-center text-gray-300 text-xs mt-1">
+                    <MapPin size={12} className="mr-1" />
+                    <span>{barber.location}</span>
+                  </div>
+                </div>
+                <button className="absolute right-4 top-1/2 -translate-y-1/2 bg-gray-800 rounded-full p-2">
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom navigation */}
+        <div className="fixed bottom-0 left-0 right-0 bg-black py-4 px-8 flex justify-between">
+          <button className="flex flex-col items-center text-green-400">
+            <Home size={24} />
+            <span className="text-xs mt-1">Home</span>
+          </button>
+          <button className="flex flex-col items-center text-gray-500">
+            <MapPin size={24} />
+            <span className="text-xs mt-1">Nearby</span>
+          </button>
+          <button className="flex flex-col items-center text-gray-500">
+            <ShoppingBag size={24} />
+            <span className="text-xs mt-1">Orders</span>
+          </button>
+          <button className="flex flex-col items-center text-gray-500">
+            <User size={24} />
+            <span className="text-xs mt-1">Profile</span>
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderDetailScreen = () => {
+    if (!selectedBarber) return null;
+    
+    return (
+      <div className="h-full bg-black text-white">
+        <div className="relative h-64">
+          <img src="/api/placeholder/400/300" alt={selectedBarber.name} className="w-full h-full object-cover" />
+          <button 
+            className="absolute top-4 left-4 bg-gray-800 rounded-full p-2"
+            onClick={handleBackToBrowse}
+          >
+            <ChevronLeft size={20} />
+          </button>
+        </div>
+        
+        <div className="p-4">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">{selectedBarber.name}</h2>
+            <div className="flex items-center bg-black px-2 py-1 rounded">
+              <Star size={16} className="text-green-400 mr-1" fill="currentColor" />
+              <span>{selectedBarber.rating}</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center text-gray-400 text-sm mb-6">
+            <MapPin size={16} className="mr-1" />
+            <span>{selectedBarber.location}</span>
+          </div>
+          
+          {/* Services */}
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            {selectedBarber.services && selectedBarber.services.map((service, index) => (
+              <div key={index} className={`p-3 rounded-xl ${index === 0 ? 'bg-green-400 text-black' : 'bg-gray-800'}`}>
+                <p className="text-sm">{service.name}</p>
+                <p className="font-bold">${service.price}</p>
+              </div>
+            ))}
+          </div>
+          
+          {/* Description */}
+          <div className="mb-8">
+            <p className="text-gray-400 text-sm">
+              Barbers benefit from skilled hand-eye coordination when making precise cuts and adding color to hair. In services that require blades, shears and...
+              <span className="text-green-400 ml-1">Read More</span>
+            </p>
+          </div>
+          
+          {/* Book Now Button */}
+          <button 
+            onClick={handleBookNow}
+            className="w-full bg-black text-white py-3 px-6 rounded-full flex items-center justify-between border border-gray-700"
+          >
+            <div className="bg-green-400 text-black rounded-full p-1">
+              <ChevronRight size={20} />
+            </div>
+            <span className="font-medium">Book Now</span>
+            <div className="flex">
+              <ChevronRight size={16} className="text-gray-500" />
+              <ChevronRight size={16} className="text-gray-500" />
+              <ChevronRight size={16} className="text-gray-500" />
+            </div>
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderBookingScreen = () => {
+    if (!selectedBarber) return null;
+    
+    return (
+      <div className="h-full bg-black text-white">
+        <div className="p-4">
+          <div className="flex items-center mb-6">
+            <button 
+              className="mr-4"
+              onClick={handleBackToDetail}
+            >
+              <ArrowLeft size={24} />
+            </button>
+            <h2 className="text-xl font-bold">Book Now</h2>
+          </div>
+          
+          {/* Barber info */}
+          <div className="flex items-center mb-8 bg-gray-900 p-3 rounded-2xl">
+            <div className="w-12 h-12 rounded-full overflow-hidden mr-3">
+              <img src="/api/placeholder/48/48" alt={selectedBarber.name} className="w-full h-full object-cover" />
+            </div>
+            <div>
+              <h3 className="font-bold">{selectedBarber.name}</h3>
+              <div className="flex items-center text-gray-400 text-xs">
+                <MapPin size={12} className="mr-1" />
+                <span>{selectedBarber.location}</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Available slots */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-bold">Available Slots</h3>
+              <button className="text-gray-400">
+                Week
+              </button>
+            </div>
+            
+            {/* Date selection */}
+            <p className="text-gray-400 text-sm mb-2">Select Date</p>
+            <div className="flex justify-between mb-6">
+              {dates.map(date => (
+                <button 
+                  key={date.day}
+                  className={`flex flex-col items-center p-3 rounded-xl ${
+                    selectedDate === date.day ? 'bg-green-400 text-black' : 'bg-gray-800'
+                  }`}
+                  onClick={() => setSelectedDate(date.day)}
+                >
+                  <span className="text-sm">{date.day}</span>
+                  <span className="text-xs">{date.month}</span>
+                  <span className="text-xs mt-1">{date.weekday}</span>
+                </button>
+              ))}
+            </div>
+            
+            {/* Time selection */}
+            <p className="text-gray-400 text-sm mb-2">Select Time</p>
+            <div className="bg-gray-800 p-4 rounded-xl mb-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-sm text-gray-400">From</p>
+                  <p className="font-bold">05:00 PM</p>
+                </div>
+                <ChevronRight size={20} className="text-gray-400" />
+                <div>
+                  <p className="text-sm text-gray-400">To</p>
+                  <p className="font-bold">06:00 PM</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Confirm Button */}
+          <button className="w-full bg-black text-white py-3 px-6 rounded-full flex items-center justify-between border border-gray-700">
+            <div className="bg-green-400 text-black rounded-full p-1">
+              <ChevronRight size={20} />
+            </div>
+            <span className="font-medium">Confirm Booking</span>
+            <div className="flex">
+              <ChevronRight size={16} className="text-gray-500" />
+              <ChevronRight size={16} className="text-gray-500" />
+              <ChevronRight size={16} className="text-gray-500" />
+            </div>
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderActiveScreen = () => {
+    switch (activeScreen) {
+      case 'browse':
+        return renderBrowseScreen();
+      case 'detail':
+        return renderDetailScreen();
+      case 'booking':
+        return renderBookingScreen();
+      default:
+        return renderBrowseScreen();
+    }
+  };
+
+  return (
+    <div className="bg-gray-200 p-4 min-h-screen flex justify-center">
+      <div className="relative max-w-md w-full h-[600px] overflow-hidden rounded-3xl shadow-2xl">
+        {renderActiveScreen()}
+      </div>
+    </div>
+  );
+};
+
+export default AfroGentsMobileApp;

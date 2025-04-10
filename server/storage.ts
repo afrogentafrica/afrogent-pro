@@ -1,0 +1,54 @@
+import { 
+  User, InsertUser,
+  Service, InsertService,
+  Stylist, InsertStylist,
+  StylistService, InsertStylistService,
+  Booking, InsertBooking
+} from "@shared/schema";
+import { databaseStorage } from "./storage/databaseStorage";
+
+/**
+ * Interface for storage operations.
+ * This interface ensures that any storage implementation (memory or database)
+ * follows the same contract for data operations.
+ */
+export interface IStorage {
+  // User operations
+  getUser(id: number): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, user: Partial<InsertUser>): Promise<User | undefined>;
+  
+  // Service operations
+  getServices(): Promise<Service[]>;
+  getService(id: number): Promise<Service | undefined>;
+  createService(service: InsertService): Promise<Service>;
+  updateService(id: number, service: Partial<InsertService>): Promise<Service | undefined>;
+  deleteService(id: number): Promise<boolean>;
+
+  // Stylist operations
+  getStylists(): Promise<Stylist[]>;
+  getStylist(id: number): Promise<Stylist | undefined>;
+  createStylist(stylist: InsertStylist): Promise<Stylist>;
+  updateStylist(id: number, stylist: Partial<InsertStylist>): Promise<Stylist | undefined>;
+  deleteStylist(id: number): Promise<boolean>;
+
+  // Stylist-Service operations
+  getStylistServices(stylistId: number): Promise<StylistService[]>;
+  addServiceToStylist(stylistService: InsertStylistService): Promise<StylistService>;
+  removeServiceFromStylist(stylistId: number, serviceId: number): Promise<boolean>;
+
+  // Booking operations
+  getBookings(): Promise<Booking[]>;
+  getBooking(id: number): Promise<Booking | undefined>;
+  createBooking(booking: InsertBooking): Promise<Booking>;
+  updateBooking(id: number, booking: Partial<InsertBooking>): Promise<Booking | undefined>;
+  deleteBooking(id: number): Promise<boolean>;
+  getBookingsByStatus(status: string): Promise<Booking[]>;
+  getBookingsByDate(startDate: Date, endDate: Date): Promise<Booking[]>;
+  getBookingsByStylist(stylistId: number): Promise<Booking[]>;
+  getBookingsByClient(clientId: number): Promise<Booking[]>;
+}
+
+// Export the database storage instance as our main storage
+export const storage = databaseStorage;
